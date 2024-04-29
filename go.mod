@@ -1,4 +1,4 @@
-module github.com/lindenlab/caddy-s3-proxy
+module github.com/jpetrucciani/caddy-s3-proxy
 
 go 1.13
 
