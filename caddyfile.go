@@ -38,6 +38,8 @@ func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error)
 func parseCaddyfileWithDispenser(h *caddyfile.Dispenser) (*S3Proxy, error) {
 	var b S3Proxy
 
+	replacer := caddy.NewReplacer()
+
 	h.NextArg() // skip block beginning: "s3proxy"
 parseLoop:
 	for h.NextBlock(0) {
@@ -46,18 +48,22 @@ parseLoop:
 			if !h.AllArgs(&b.Endpoint) {
 				return nil, h.ArgErr()
 			}
+			b.Endpoint = replacer.ReplaceAll(b.Endpoint, "")
 		case "region":
 			if !h.AllArgs(&b.Region) {
 				return nil, h.ArgErr()
 			}
+			b.Region = replacer.ReplaceAll(b.Region, "")
 		case "profile":
 			if !h.AllArgs(&b.Profile) {
 				return nil, h.ArgErr()
 			}
+			b.Profile = replacer.ReplaceAll(b.Profile, "")
 		case "root":
 			if !h.AllArgs(&b.Root) {
 				return nil, h.ArgErr()
 			}
+			b.Root = replacer.ReplaceAll(b.Root, "")
 		case "hide":
 			b.Hide = h.RemainingArgs()
 			if len(b.Hide) == 0 {
@@ -67,6 +73,7 @@ parseLoop:
 			if !h.AllArgs(&b.Bucket) {
 				return nil, h.ArgErr()
 			}
+			b.Bucket = replacer.ReplaceAll(b.Bucket, "")
 			if b.Bucket == "" {
 				break parseLoop
 			}
